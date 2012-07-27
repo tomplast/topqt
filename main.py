@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+# =)
 import subprocess, sys
 from PyQt4 import QtCore, QtGui, uic
 
