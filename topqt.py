@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 
-import subprocess, sys, os, time
+
+import configparser
+import subprocess
+import sys
+import os
+import time
 from threading import Thread
 from PyQt4 import QtCore, QtGui, uic
 
@@ -65,12 +70,33 @@ def getAndShowProcesses():
             for colNameNr in range(len(columnHeadings)):
                 psTuple[columnHeadings[colNameNr]] = colValues.split()[colNameNr]
             
-            #print(psTuple)
-            psTuple["NAME"] = psTuple["COMMAND"].split("/")[-1]
+            
+            if "[" in psTuple["COMMAND"]:
+                psTuple["NAME"] = psTuple["COMMAND"]
+            else:
+                psTuple["NAME"] = psTuple["COMMAND"].split("/")[-1]
+            #psTuple["NAME"] = psTuple["COMMAND"].split("/")[-1]
             insertRow(psTuple)
 
 
+def readConfig():
+    keyToColumnNames = {"COMMAND": "Command", "USER": "Useless"}
+    
+    config = configparser.RawConfigParser()
+    config.read('topqt.conf')
+    
+    setupTuple = []
+    for c in config.get('general','columns').split(","):
+
+        try:
+            setupTuple.append({"caption": keyToColumnNames[c], "key": c})
+        except:
+            pass
+
+    setupTable(setupTuple)
+
 def main():
+    
     global window
     app = QtGui.QApplication(sys.argv)
     if os.path.isfile("/usr/share/topqt/topqt.ui"):
@@ -80,12 +106,11 @@ def main():
     else:
         print("Error! Couldn't find user interface file. Aborting!")
         sys.exit(1)
+        
+    readConfig()
     
-    setupTable([{"caption": "PID", "key": "PID"},{"caption":"Name","key":"NAME"}, {"caption":"%CPU","key":"%CPU"},{"caption":"path","key":"COMMAND"}])
+    #setupTable([{"caption": "PID", "key": "PID"},{"caption":"Name","key":"NAME"}, {"caption":"%CPU","key":"%CPU"},{"caption":"path","key":"COMMAND"}])
     
-    #Refresh process table periodacally
-    #t = Thread(target=refreshTable, args=(1,))
-    #t.run()
     t = RefresherThread(5)
     t.start()
 
