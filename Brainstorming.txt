@@ -3,3 +3,6 @@ Build application as three pieces:
 * Library file: libtopqt.py
 * QT Gui
 * Logging daemon
+* Save logging to sqlite3
+    - Values in the sqlite3 will be: ?
+        
