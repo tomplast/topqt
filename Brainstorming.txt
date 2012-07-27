@@ -1,0 +1,5 @@
+Build application as three pieces:
+
+* Library file: libtopqt.py
+* QT Gui
+* Logging daemon
