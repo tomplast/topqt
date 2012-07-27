@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import subprocess, sys
+import subprocess, sys, os
 from PyQt4 import QtCore, QtGui, uic
 
 window = None
@@ -39,7 +39,14 @@ def insertRow(data):
 def main():
     global window
     app = QtGui.QApplication(sys.argv)
-    window = uic.loadUi("ProgramA.ui");
+    if os.path.isfile("/usr/share/topqt/topqt.ui"):
+        window = uic.loadUi("/usr/share/topqt/topqt.ui")
+    elif os.path.isfile("topqt.ui"):
+        window = uic.loadUi("topqt.ui")
+    else:
+        print("Error! Couldn't find user interface file. Aborting!")
+        sys.exit(1)
+    
     setupTable([{"caption": "PID", "key": "PID"},{"caption":"Name","key":"NAME"}, {"caption":"%CPU","key":"%CPU"},{"caption":"path","key":"COMMAND"}])
     
     psAUX = subprocess.getoutput('ps aux')
