@@ -114,6 +114,8 @@ def main():
     t = RefresherThread(5)
     t.start()
 
+    window.connect(window.actionQuit, QtCore.SIGNAL("triggered()"), actionQuitTriggered);
+
     window.show();
     sys.exit(app.exec_())
 if __name__ == '__main__':
