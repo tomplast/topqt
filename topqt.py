@@ -70,6 +70,10 @@ def getAndShowProcesses():
             insertRow(psTuple)
 
 
+def actionQuitTriggered():
+	QtGui.QApplication.quit()
+
+
 def main():
     global window
     app = QtGui.QApplication(sys.argv)
@@ -88,6 +92,8 @@ def main():
     #t.run()
     t = RefresherThread(5)
     t.start()
+
+    window.connect(window.actionQuit, QtCore.SIGNAL("triggered()"), actionQuitTriggered);
 
     window.show();
     sys.exit(app.exec_())
