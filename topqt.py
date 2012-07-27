@@ -12,6 +12,8 @@ from PyQt4 import QtCore, QtGui, uic
 window = None
 columnKeyBindings = None
 
+# :/
+
 class RefresherThread(QtCore.QThread):
     refreshFrequency = None
     
@@ -94,6 +96,9 @@ def readConfig():
             pass
 
     setupTable(setupTuple)
+
+def actionQuitTriggered():
+	QtGui.QApplication.quit()
 
 def main():
     
