@@ -1,18 +1,17 @@
 #!/usr/bin/python3
 
-
 import configparser
 import subprocess
 import sys
 import os
 import time
+from libtopqt import *
 from threading import Thread
 from PyQt4 import QtCore, QtGui, uic
+import gettext
 
 window = None
 columnKeyBindings = None
-
-# :/
 
 class RefresherThread(QtCore.QThread):
     refreshFrequency = None
@@ -62,26 +61,15 @@ def insertRow(data):
 
 
 def getAndShowProcesses():
-    psAUX = subprocess.getoutput('ps aux')
-    psTuple = {}
-    for line in psAUX.split("\t"):
-        columnHeadings = (line.split("\n")[0].split())
-        values = line.split("\n")[1:]
-        
-        for colValues in values:
-            for colNameNr in range(len(columnHeadings)):
-                psTuple[columnHeadings[colNameNr]] = colValues.split()[colNameNr]
-            
-            
-            if "[" in psTuple["COMMAND"]:
-                psTuple["NAME"] = psTuple["COMMAND"]
-            else:
-                psTuple["NAME"] = psTuple["COMMAND"].split("/")[-1]
-            #psTuple["NAME"] = psTuple["COMMAND"].split("/")[-1]
-            insertRow(psTuple)
+    processHandler = ProcessHandler()    
+    for psTuple in processHandler.getProcesses():
+        insertRow(psTuple)
 
 
 def readConfig():
+	#Used for translation
+
+	#Fix translations
     keyToColumnNames = {"COMMAND": "Command", "USER": "Useless"}
     
     config = configparser.RawConfigParser()
@@ -93,14 +81,17 @@ def readConfig():
         try:
             setupTuple.append({"caption": keyToColumnNames[c], "key": c})
         except:
+            setupTuple.append({"caption": c, "key": c})
             pass
 
     setupTable(setupTuple)
 
 def actionQuitTriggered():
-	QtGui.QApplication.quit()
+    QtGui.QApplication.quit()
 
 def main():
+    gettext.install('topqt', './locale')
+	
     
     global window
     app = QtGui.QApplication(sys.argv)
@@ -109,7 +100,7 @@ def main():
     elif os.path.isfile("topqt.ui"):
         window = uic.loadUi("topqt.ui")
     else:
-        print("Error! Couldn't find user interface file. Aborting!")
+        print(_("Error! Couldn't find user interface file. Aborting!"))
         sys.exit(1)
         
     readConfig()
