@@ -92,7 +92,7 @@ class DatabaseHandler:
 		connection.commit()
 		cur.close()
 	
-	def insertValue(self,columnValues):
+	def insertValueToDatabase(self,columnValues):
 		connection = lite.connect(self._dbName)
 		cur=connection.cursor()
 		print(columnValues)
