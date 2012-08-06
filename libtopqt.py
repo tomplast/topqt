@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sqlite3 as lite
 import subprocess
 import sys
 import os
@@ -65,5 +66,46 @@ class ProcessHandler:
 					psTuple["NAME"] = psTuple["COMMAND"].split("/")[-1]
 				#psTuple["NAME"] = psTuple["COMMAND"].split("/")[-1]
 				processes.append(psTuple)
-
 		return processes
+
+class DatabaseHandler:
+	_dbName = None
+	_tblName = None
+	
+	def __init__(self,dbName, tblName):
+		self._dbName = dbName
+		self._tblName = tblName
+	
+	def createdb(self):
+		connection = lite.connect(self._dbName)
+		cur=connection.cursor()
+		cur.execute("""CREATE TABLE ps(
+		Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+		TimeStamp TEXT NOT NULL,
+		User TEXT NOT NULL,
+		Command TEXT NOT NULL,
+		TTY TEXT NOT NULL,
+		VSZ INTEGER NOT NULL,
+		RSS INTEGER NOR NULL,
+		CPU REAL NOT NULL,
+		Memory NOT NULL
+		);""")
+		connection.commit()
+		cur.close()
+	
+	def insertValue(self,columnValues):
+		connection = lite.connect(self._dbName)
+		cur=connection.cursor()
+		print(columnValues)
+		for psTuple in columnValues:
+			TimeStamp = time.strftime("%Y.%m.%d@%H:%M:%S")
+			User = psTuple["USER"]
+			Command = psTuple["COMMAND"]
+			TTY = psTuple["TTY"]
+			VSZ = psTuple["VSZ"]
+			RSS = psTuple["RSS"]
+			CPU = psTuple["%CPU"]
+			Memory = psTuple["%MEM"]
+			cur.execute("""INSERT INTO ps(TimeStamp,User,Command,TTY,VSZ,RSS,CPU,Memory) VALUES(?,?,?,?,?,?,?,?)""",(TimeStamp,User,Command,TTY,VSZ,RSS,CPU,Memory))
+		connection.commit()
+		cur.close()
