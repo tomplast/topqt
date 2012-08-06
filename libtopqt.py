@@ -53,6 +53,7 @@ class ProcessHandler:
 			values = line.split("\n")[1:]
 
 			for colValues in values:
+				print(colValues)
 				psTuple =  {}
 				for colNameNr in range(len(columnHeadings)):
 					psTuple[columnHeadings[colNameNr]] = colValues.split()[colNameNr]
