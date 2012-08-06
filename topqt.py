@@ -90,8 +90,8 @@ def actionQuitTriggered():
 	QtGui.QApplication.quit()
 
 def main():
-	gettext.install('topqt', './locale')
-	
+	gettext.install('topqt')
+	gettext.translation('topqt', './locale', languages=['sv']).install(True)
 	
 	global window
 	app = QtGui.QApplication(sys.argv)
@@ -100,7 +100,7 @@ def main():
 	elif os.path.isfile("topqt.ui"):
 		window = uic.loadUi("topqt.ui")
 	else:
-		print(_("Error! Couldn't find user interface file. Aborting!"))
+		print(_("Error! Couldn't find user interface file topqt.ui! Aborting!"))
 		sys.exit(1)
 		
 	readConfig()

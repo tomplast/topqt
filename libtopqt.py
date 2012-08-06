@@ -33,7 +33,6 @@ class KernelModuleHandler:
 		call("rmmod " + moduleName)
 
 class ProcessHandler:
-	processes = []
 
 	def killProcesses(self, processTuple):
 		if processTuple is None: return
@@ -49,12 +48,13 @@ class ProcessHandler:
 	def getProcesses(self):
 		psAUX = subprocess.getoutput('ps aux')
 		processes = []
-		psTuple = {}
+		
 		for line in psAUX.split("\t"):
 			columnHeadings = (line.split("\n")[0].split())
 			values = line.split("\n")[1:]
-		
+
 			for colValues in values:
+				psTuple =  {}
 				for colNameNr in range(len(columnHeadings)):
 					psTuple[columnHeadings[colNameNr]] = colValues.split()[colNameNr]
 			
