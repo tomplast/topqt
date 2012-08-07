@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import calendar
 import sqlite3 as lite
 import subprocess
 import sys
@@ -80,7 +81,7 @@ class DatabaseHandler:
 		cur=connection.cursor()
 		cur.execute("""CREATE TABLE ps(
 		Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-		TimeStamp TEXT NOT NULL,
+		TimeStamp INTEGER NOT NULL,
 		User TEXT NOT NULL,
 		Command TEXT NOT NULL,
 		TTY TEXT NOT NULL,
@@ -96,7 +97,7 @@ class DatabaseHandler:
 		connection = lite.connect(self._dbName)
 		cur=connection.cursor()
 		for psTuple in columnValues:
-			TimeStamp = time.strftime("%Y.%m.%d@%H:%M:%S")
+			TimeStamp = int(time.time())
 			User = psTuple["USER"]
 			Command = psTuple["COMMAND"]
 			TTY = psTuple["TTY"]
@@ -118,11 +119,26 @@ class DatabaseHandler:
 		cur.close()
 		return returnValue
 
+	def returnTimeToInt(self,timeStamp):
+		date = timeStamp.split(" ")[0].split("-")
+		time = timeStamp.split(" ")[1].split(":")
+		tmpDataTime = date + time
+		mergeData = []
+		for timeMerge in tmpDataTime:
+			mergeData.append(int(timeMerge))
+		return calendar.timegm(tuple(mergeData))
 
-	def getValuesFromDatabase(self,columnValue,startTime,endTime):
+
+	def getValuesFromDatabase(self,stTime,enTime):
 		returnValue = []
 		connection = lite.connect(self._dbName)
 		cur = connection.cursor()
-		sql = "SELECT * FROM ps WHERE TimeStamp >= '{0}' AND TimeStamp <= '{1}'" .format(startTime,endTime)
-		for values in cur.execute(sql):
-			print(values)
+		sql = """SELECT * FROM ps 
+				WHERE 
+				TimeStamp >= {0} 
+				AND 
+				TimeStamp <= {1}""" .format(stTime,enTime)
+		print(sql)
+		cur.execute(sql)
+		connection.commit()
+		cur.close()
