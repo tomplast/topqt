@@ -7,11 +7,21 @@ import os
 import time
 from libtopqt import *
 from threading import Thread
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtGui, uic
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
 import gettext
 
 window = None
 columnKeyBindings = None
+selectedRowIndex = None
+
+class SettingsDialog(QtGui.QDialog):
+	def __init__(self, parent=None):
+		QtGui.QDialog.__init__(self, parent)
+		self.setWindowTitle('Settings')
+		self.resize(300, 200)
+
 
 class RefresherThread(QtCore.QThread):
 	refreshFrequency = None
@@ -89,6 +99,16 @@ def readConfig():
 def actionQuitTriggered():
 	QtGui.QApplication.quit()
 
+
+def actionSettingsTriggered():
+	settingsDialog = SettingsDialog(window)
+	settingsDialog.exec()
+
+def itemSelectionChanged():
+	pass
+	#print(window.tableWidget.selectedIndexes()[0].row())
+	#print(window.tableWidget.selectedItems())
+
 def main():
 	gettext.install('topqt')
 	gettext.translation('topqt', './locale', languages=['sv']).install(True)
@@ -111,6 +131,9 @@ def main():
 	t.start()
 
 	window.connect(window.actionQuit, QtCore.SIGNAL("triggered()"), actionQuitTriggered);
+	window.connect(window.actionSettings, QtCore.SIGNAL("triggered()"), actionSettingsTriggered);
+
+	#window.tableWidget.connect(window.tableWidget, QtCore.SIGNAL('itemSelectionChanged()'), itemSelectionChanged)
 
 	window.show();
 	sys.exit(app.exec_())

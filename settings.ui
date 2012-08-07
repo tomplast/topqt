@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>settings</class>
+ <widget class="QDialog" name="settings">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
-    <height>289</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TopQt - Settings</string>
+   <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
  </widget>
  <resources/>
  <connections/>

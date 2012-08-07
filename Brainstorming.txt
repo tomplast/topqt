@@ -5,4 +5,7 @@ Build application as three pieces:
 * Logging daemon
 * Save logging to sqlite3
     - Values in the sqlite3 will be: ?
+
+* Use Unix timestamp instead of text as column type in the database. Saves us
+  a lot of space and makes database querying faster.
         
