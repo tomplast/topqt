@@ -4,8 +4,6 @@ Build application as three pieces:
 * QT Gui
 * Logging daemon
 * Save logging to sqlite3
-    - Values in the sqlite3 will be: ?
-
-* Use Unix timestamp instead of text as column type in the database. Saves us
-  a lot of space and makes database querying faster.
-        
+    - Values in the sqlite3 will be: all
+- Get values in specified timeStamp intervall
+- change timeStamp from string --> integer value
