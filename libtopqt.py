@@ -95,7 +95,6 @@ class DatabaseHandler:
 	def insertValueToDatabase(self,columnValues):
 		connection = lite.connect(self._dbName)
 		cur=connection.cursor()
-		print(columnValues)
 		for psTuple in columnValues:
 			TimeStamp = time.strftime("%Y.%m.%d@%H:%M:%S")
 			User = psTuple["USER"]
@@ -108,3 +107,13 @@ class DatabaseHandler:
 			cur.execute("""INSERT INTO ps(TimeStamp,User,Command,TTY,VSZ,RSS,CPU,Memory) VALUES(?,?,?,?,?,?,?,?)""",(TimeStamp,User,Command,TTY,VSZ,RSS,CPU,Memory))
 		connection.commit()
 		cur.close()
+
+	def getValueFromDatabase(self,columnValues):
+		returnValue = []
+		connection = lite.connect(self._dbName)
+		cur=connection.cursor()
+		for values in cur.execute("SELECT * FROM ps").fetchall():
+			returnValue.append(values)
+		connection.commit()
+		cur.close()
+		return returnValue
