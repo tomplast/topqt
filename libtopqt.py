@@ -108,7 +108,7 @@ class DatabaseHandler:
 		connection.commit()
 		cur.close()
 
-	def getValueFromDatabase(self,columnValues):
+	def getAllValueFromDatabase(self,columnValues):
 		returnValue = []
 		connection = lite.connect(self._dbName)
 		cur=connection.cursor()
@@ -117,3 +117,12 @@ class DatabaseHandler:
 		connection.commit()
 		cur.close()
 		return returnValue
+
+
+	def getValuesFromDatabase(self,columnValue,startTime,endTime):
+		returnValue = []
+		connection = lite.connect(self._dbName)
+		cur = connection.cursor()
+		sql = "SELECT * FROM ps WHERE TimeStamp >= '{0}' AND TimeStamp <= '{1}'" .format(startTime,endTime)
+		for values in cur.execute(sql):
+			print(values)
