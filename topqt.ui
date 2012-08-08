@@ -6,17 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>374</width>
-    <height>355</height>
+    <width>685</width>
+    <height>634</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLineEdit" name="processNameFilter"/>
+      </item>
       <item>
        <widget class="QTableWidget" name="tableWidget">
         <property name="sizePolicy">
@@ -45,7 +48,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>374</width>
+     <width>685</width>
      <height>22</height>
     </rect>
    </property>

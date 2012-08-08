@@ -11,10 +11,12 @@ from PyQt4 import QtGui, uic
 from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 import gettext
+import re
 
 window = None
 columnKeyBindings = None
 selectedRowIndex = None
+processNameFilter = "bash"
 
 class SettingsDialog(QtGui.QDialog):
 	def __init__(self, parent=None):
@@ -34,7 +36,11 @@ class RefresherThread(QtCore.QThread):
 		while True:
 			window.tableWidget.clearContents()
 			for i in range(window.tableWidget.rowCount()-1, -1, -1):
-				window.tableWidget.removeRow(i)
+				try:
+					window.tableWidget.removeRow(i)
+				except Exception:
+					print("Här blev det fel" + i)
+					
 			getAndShowProcesses()
 			time.sleep(self.refreshFrequency)
 
@@ -55,7 +61,10 @@ def insertRow(data):
 	matchKey = None
 
 	tableWidget = window.tableWidget
+	tableWidget.setSortingEnabled(False)
 	tableWidget.insertRow(tableWidget.rowCount())
+
+	#tableWidget.insertRow(tableWidget.rowCount())
 
 	for value in data:
 		searchIndex = 0
@@ -69,10 +78,18 @@ def insertRow(data):
 		if matchKey:
 			tableWidget.setItem(tableWidget.rowCount()-1, searchIndex-1, QtGui.QTableWidgetItem(data[matchKey]))
 
+	#Ugly hack filter
+	if not re.match('.*' + processNameFilter + '.*', data["NAME"]):
+		print("WRONG")
+		tableWidget.hideRow(1)
+
+	tableWidget.setSortingEnabled(True)
 
 def getAndShowProcesses():
 	processHandler = ProcessHandler()	
-	for psTuple in processHandler.getProcesses():
+	processes = processHandler.getProcesses()
+	print("Found: {0} processes".format(len(processes)))
+	for psTuple in processes:
 		insertRow(psTuple)
 
 
